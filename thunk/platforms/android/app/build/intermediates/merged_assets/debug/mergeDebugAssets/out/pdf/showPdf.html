@@ -1,0 +1,220 @@
+<!DOCTYPE html >
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>pdf文件预览</title>
+		<link rel="stylesheet" href="showPdf.css" />
+		<link rel="stylesheet" href="mui.min.css" />
+		<link rel="stylesheet" href="font-awesome.min.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=3.0, user-scalable=yes">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</head>
+
+	<body class="body" onclick="bodyClick()">
+		<div style="width: 66px;height: 24px;background:rgb(72,73,74);position: fixed;z-index: 1;top: 5%;right: 30px;text-align: center;line-height: 24px">
+			<span id="demo" style="color: #ffffff;font-size: 16px;">0/0</span>
+		</div>
+		<canvas id="the-canvas" style="width: 100%;height: 100%;display: none;"></canvas>
+		<!-- 用于显示组件的容器 -->
+		<div class="img_box" style="width: 100%;height: 100%;position: relative;">
+			<h1 id="alert_box" style="display: none;font-size: 12px;text-align: center;"><img src="images/load.gif"/></h1>
+		</div>
+	</body>
+	<script src="pdf.js"></script>
+	<script type="text/javascript" src="jq-1.7.2.js"></script>
+	<script type="text/javascript">
+		"use strict";
+		PDFJS.workerSrc = 'pdf.worker.js';
+        PDFJS.cMapUrl = 'cmaps/';
+        PDFJS.cMapPacked = true;
+
+		var pdfDoc = null,
+			pageNum = 1,
+            pageIndex = 1,
+            pageMax = 0,
+			pageRendering = false,
+			pageNumPending = null,
+			scale = 2,
+			canvas = document.getElementById('the-canvas'),
+			img = document.getElementById('img'),
+			ctx = canvas.getContext('2d');
+		/**
+		 * Get page info from document, resize canvas accordingly, and render page.
+		 * @param num Page number.
+		 */
+		// 拿取数据
+		var arr = [];
+		var renderTask = [];
+		function loadArr(num, numPage) {
+			pageRendering = true;
+			// Using promise to fetch the page
+			pdfDoc.getPage(num).then(function(page) {
+				var viewport = page.getViewport(scale);
+				canvas.height = viewport.height;
+				canvas.width = viewport.width;
+
+				// Render PDF page into canvas context
+				var renderContext = {
+					canvasContext: ctx,
+					viewport: viewport
+				};
+				page.render(renderContext).promise.then(function() {
+					pageRendering = false;
+					if(pageNumPending !== null) {
+						// New page rendering is pending
+						renderPage(pageNumPending);
+						pageNumPending = null;
+					}
+					//canvas绘画
+					// drawImg();
+					var base64Img = canvas.toDataURL();
+					var imgObj = {
+						img: base64Img,
+						index: num,
+						pageNum:numPage
+					};
+					//加载图片
+					loadImg(imgObj);
+					if(num < numPage) {
+						$('#show').show();
+						loadArr(num + 1, numPage);
+					}
+					console.log(num);
+				});
+			});
+
+		}
+		//渲染图片
+		function loadImg(imgObj) {
+            var str = `<img class="add_img" id="page${imgObj.index}" src="${imgObj.img}"/>`
+			$('.img_box').append(str);
+			$(function() {
+	                if(imgObj.index <1){
+	                	
+	                }
+	                if(imgObj.index == 1){
+	                	document.getElementById('alert_box').style.display = 'none';
+	                }
+	                if(imgObj.index==imgObj.pageNum){
+	                	$('.pinch-zoom-container').remove();                	
+	                }
+			})
+		}
+
+		/**
+		 * If another page rendering in progress, waits until the rendering is
+		 * finised. Otherwise, executes rendering immediately.
+		 */
+		function queueRenderPage(num) {
+			if(pageRendering) {
+				pageNumPending = num;
+			} else {
+				renderPage(num);
+			}
+		}
+
+		function getNowFormatDate() {
+			var date = new Date();
+			var seperator1 = "-";
+			var seperator2 = ":";
+			var month = date.getMonth() + 1;
+			var strDate = date.getDate();
+			if(month >= 1 && month <= 9) {
+				month = "0" + month;
+			}
+			if(strDate >= 0 && strDate <= 9) {
+				strDate = "0" + strDate;
+			}
+			var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate +
+				" " + date.getHours() + seperator2 + date.getMinutes() +
+				seperator2 + date.getSeconds();
+			return currentdate;
+		}
+
+		//绘画文字
+		function drawImg() {
+			var text = fullName + " " + getNowFormatDate();
+			// 需要绘制的文本内容
+			//			ctx.fillStyle = '#f90'; 
+			//			// 文本颜色
+			//			ctx.textAlign = 'center'; 
+			//			// 文本对齐方式 
+			//			ctx.font = '60px Airal'; 
+			ctx.globalAlpha = 0.3;
+			//			ctx.rotate(Math.PI/6);
+			//			ctx.fillStyle = ctx.createPattern(canvas,"repeat");
+			//			// 文本字号、字体
+			//			ctx.fillText(text, 200,  400);
+			ctx.font = "46px 黑体";
+			ctx.rotate(-20 * Math.PI / 180);
+			ctx.fillStyle = "rgba(12,100,100,0.4)";
+			ctx.rotate('Math.PI/60');
+			for(let i of [1, 2, 3, 4, 5, 6, 7, 8]) {
+				ctx.fillText(text + " " + text, -300-i * 10, i * 260-50);
+				ctx.fillText(text + " " + text, -400 - i * 10, i * 260+80);
+			}
+			//loading 隐藏
+			document.getElementById('alert_box').style.display = 'none';
+		}
+
+		var alert_box = document.getElementById('alert_box');
+		var url="";
+		var fullName="";
+		var pdfPath="";
+
+		function setUrl(options){
+			var formatOptions = JSON.parse(options);
+			fullName=formatOptions.fullname;
+			pdfPath=formatOptions.pdfPath;
+			url=pdfPath;
+			console.log(url);
+			/**
+			 * Asynchronously downloads PDF.
+			 */
+			alert_box.style.display = 'block';
+			PDFJS.getDocument(url).then(function(pdfDoc_) {
+				pdfDoc = pdfDoc_;
+                pageMax=pdfDoc.numPages;
+                document.getElementById("demo").innerHTML=pageIndex+'/'+pageMax;
+				loadArr(pageNum, pdfDoc.numPages);
+			});
+		}
+
+        window.onscroll = function () {
+            var pageTop = scroll().top;
+            var pageHeight = document.getElementById('page1').scrollHeight;
+            pageIndex=Math.round(pageTop/pageHeight)+1;
+            document.getElementById("demo").innerHTML=pageIndex+'/'+pageMax;
+        };
+
+        function scroll(){
+            //如果这个属性存在，那么返回值应该是0-无穷大
+            //如果没有返回值是undefined；
+            //只要判断不是undefined就可以调用此方法
+            //练习使用此种封装
+            if(window.pageYOffset !== undefined){
+                return {
+                    "top": window.pageYOffset,
+                    "left": window.pageXOffset
+                };
+            }else if(document.compatMode === "CSS1Compat"){
+                return {
+                    "top": document.documentElement.scrollTop,
+                    "left": document.documentElement.scrollLeft
+                };
+            }else{
+                return {
+                    "top": document.body.scrollTop,
+                    "left": document.body.scrollLeft
+                };
+            }
+        }
+
+        function bodyClick() {
+            if (pageMax!==0){
+                console.log('bodyClick');
+			}
+        }
+	</script>
+</html>

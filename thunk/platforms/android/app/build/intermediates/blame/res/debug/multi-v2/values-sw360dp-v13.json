@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "E:\\work\\git\\wx-demo\\thunk\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw360dp-v13\\values-sw360dp-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Administrator\\.gradle\\caches\\transforms-1\\files-1.1\\imagelibrary-release.aar\\5f94093c2c17aef7d50193057056c3c7\\res\\values-sw360dp-v13\\values-sw360dp-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,108,154",
+                        "endColumns": "52,45,44",
+                        "endOffsets": "103,149,194"
+                    }
+                }
+            ]
+        }
+    ]
+}

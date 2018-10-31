@@ -1,0 +1,75 @@
+html,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0 auto !important;
+    position: relative;
+}
+/*html{
+	overflow: hidden;
+}
+body{
+	overflow: hidden;
+}*/
+.pdf_box{
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+.img_box .add_img{
+	width: 100%;
+}
+div.page{
+    margin: 50px auto 50px auto;
+    max-width: 500px;
+    position: relative;
+    text-align: left;
+}
+.pinch-zoom-container{
+	min-height: 439px;
+	overflow: hidden;
+}
+div.pinch-zoom {
+    position: relative;
+}
+div.pinch-zoom a{
+    color: white;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-decoration: none;
+    background: #333;
+    padding: 3px;
+    font-size: 11px;
+}
+
+div.pinch-zoom div.description {
+    position: absolute;
+    top: 500px;
+    left: 210px;
+}
+
+div.pinch-zoom div.description h1{
+    font-size: 40px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+div.pinch-zoom div.description p{
+    margin: 0px;
+}
+.pinch-zoom img{
+	width: 100%;
+	height: 100%;
+}
+ul{
+    margin: 0;
+    padding: 0;
+}
+.move_down{
+	text-align: center;
+	width: 100%;
+	height: 40px;
+	position: relative;
+	z-index: 9;
+	padding: 10px;
+}

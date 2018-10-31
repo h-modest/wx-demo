@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: sharedpreferenceslibrary-release:@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/sharedpreferenceslibrary-release.aar/2237b4b67a7037c2d434bd1f41765e63/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/sharedpreferenceslibrary-release.aar/2237b4b67a7037c2d434bd1f41765e63/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

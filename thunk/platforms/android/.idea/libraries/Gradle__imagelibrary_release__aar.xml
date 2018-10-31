@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: imagelibrary-release:@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/imagelibrary-release.aar/5f94093c2c17aef7d50193057056c3c7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/imagelibrary-release.aar/5f94093c2c17aef7d50193057056c3c7/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
